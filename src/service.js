@@ -17,6 +17,28 @@ function ValidationService(){
 
         return HttpResponse.GoodResponse(HTTP_CODES.OK, data, "Successfully retrieved developer details");
     }
+    function isValidCondition(condition){
+        const conditions = {
+            "gte": true,
+            "eq": true,
+            "neq": true,
+            "gt": true,
+            "contains": true,
+        }
+
+        return conditions[condition] ? true : false;
+    }
+    function conditionCheck(data, conditionValue, condition){
+        const conditions = {
+            "gte": data >= conditionValue,
+            "eq": data === conditionValue,
+            "neq": data !== conditionValue,
+            "gt": data > conditionValue,
+            "contains": data.indexOf(conditionValue) > -1 ? true : false,
+        }
+
+        return conditions[condition]
+    }
 
     function ValidateData(data){
         if(data.hasOwnProperty('rule') === false){
@@ -55,18 +77,18 @@ function ValidationService(){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`data is invalid.`, data:null, status:'error'})
         }
 
-        let parsedFieldValue = null;
-
-        if(typeOfData == 'string' || typeOfData === 'array'){
-            let position = Number(data.rule.field);
-            parsedFieldValue = (position !== 0 && !position) ? null : position;
-        } else{
-            parsedFieldValue = Boolean(data.rule.field) ? data.rule.field.split(".") : null;
-        }
-
+        let parsedFieldValue = (typeof(data.rule.field) == 'string' && Boolean(data.rule.field)) ? data.rule.field.split('.') : typeof(data.rule.field) == 'number' ? [data.rule.field] : null;
+        console.log("parsed field value", parsedFieldValue);
         if(Boolean(parsedFieldValue) == false){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`${data.rule.field} should be ${typeOfData !== 'object' ? 'an' : 'a'} ${typeOfData !== 'object' ? 'integer' : 'string'}.`, data:null, status:'error'})
         }
+
+        const fieldValue = helpers.findFieldValue(data.data, parsedFieldValue);
+
+        if(fieldValue === undefined){
+            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`field ${data.rule.field} is missing from data.`, data:null, status:'error'})
+        }
+        
     }
 
     return {

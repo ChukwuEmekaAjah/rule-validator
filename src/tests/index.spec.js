@@ -92,7 +92,7 @@ describe('Validation should assess request body and return a result accordingly'
         const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'name', condition:"gt", condition_value:'meat'}, data:'name'});
         
         expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
-        expect(response.message).toEqual(`name should be an integer.`)
+        expect(response.message).toEqual(`field name is missing from data.`)
         
     });
 
@@ -101,6 +101,30 @@ describe('Validation should assess request body and return a result accordingly'
         
         expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
         expect(response.message).toEqual(` should be a string.`)
+        
+    });
+
+    test("should return a 400 bad request response for non-existent string character", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'7', condition:"gt", condition_value:'meat'}, data:'name'});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`field 7 is missing from data.`)
+        
+    });
+
+    test("should return a 400 bad request response for non-existent array position", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'7', condition:"gt", condition_value:'meat'}, data:['name', 'age', 'people']});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`field 7 is missing from data.`)
+        
+    });
+
+    test("should return a 400 bad request response for non-existent array object field", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'0.age', condition:"gt", condition_value:'meat'}, data:[{name:''}]});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`field 0.age is missing from data.`)
         
     });
 

@@ -18,7 +18,7 @@ function HTTP_CODES(){
 }
 function HttpResponse(){
     function GoodResponse(statusCode, data, message){
-        logMessage(message);
+        //logMessage(message);
         return {
             statusCode: statusCode,
             ...data,
@@ -26,7 +26,7 @@ function HttpResponse(){
     }
 
     function BadResponse(statusCode, data, message){
-        logMessage(message);
+        //logMessage(message);
         return {
             statusCode: statusCode,
             ...data,
@@ -39,8 +39,34 @@ function HttpResponse(){
     }
 }
 
+function findFieldValue(data, fields){
+    let object = data;
+    
+    for(let field of fields){
+        if(Boolean(object) == false){
+            return undefined;
+        }
+
+        if(typeof(object) == 'string'){
+            object = object[Number[field]];
+            continue;
+        }
+        if(Array.isArray(object)){
+            object = object[Number(field)];
+            continue;
+        }
+        
+        object = object[field];
+
+        
+    }
+
+    return object;
+}
+
 module.exports = {
     HttpResponse: HttpResponse(),
     HTTP_CODES: HTTP_CODES(),
     logMessage,
+    findFieldValue,
 }

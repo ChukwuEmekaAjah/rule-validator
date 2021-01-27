@@ -28,14 +28,14 @@ exports.getApplication = function getApplication () {
 	
 	
 	app.get('/', function(req, res){
-		const {status, ...response} = ValidationService.GetHome();
-		return res.status(status).send(response);
+		const {statusCode, ...response} = ValidationService.GetHome();
+		return res.status(statusCode).send(response);
 	});
 
 	app.post('/validate-rule', function(req, res){
 		const requestBody = Object.assign({}, req.body);
-		const {status, ...response} = ValidationService.ValidateData(requestBody)
-		return res.status(status).send(response);
+		const {statusCode, ...response} = ValidationService.ValidateData(requestBody)
+		return res.status(statusCode).send(response);
 	});
 
 	app.use(function( req, res){

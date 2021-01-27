@@ -20,16 +20,16 @@ function HttpResponse(){
     function GoodResponse(statusCode, data, message){
         logMessage(message);
         return {
-            status: statusCode,
-            data: data,
+            statusCode: statusCode,
+            ...data,
         }
     }
 
     function BadResponse(statusCode, data, message){
         logMessage(message);
         return {
-            status: statusCode,
-            data: data,
+            statusCode: statusCode,
+            ...data,
         }
     }
 

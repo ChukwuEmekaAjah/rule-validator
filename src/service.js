@@ -35,7 +35,14 @@ function ValidationService(){
             "eq": data === conditionValue,
             "neq": data !== conditionValue,
             "gt": data > conditionValue,
-            "contains": data.indexOf(conditionValue) > -1 ? true : false,
+        }
+
+        if(typeof(data) == 'string' || Array.isArray(data)){
+            conditions.contains = data.indexOf(conditionValue) > -1 ? true : false
+        } else if(typeof(data) == 'object'){
+            conditions.contains = data.hasOwnProperty(conditionValue);
+        } else{
+            conditions.contains = false;
         }
 
         return conditions[condition]
@@ -94,22 +101,11 @@ function ValidationService(){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`condition ${data.rule.condition} is invalid.`, data:null, status:'error'})
         }
 
-        // "message": "field [name of field] failed validation."
-        // "status": "error",
-        // "data": {
-        //     "validation": {
-        //     "error": false,
-        //     "field": "[name of field]",
-        //     "field_value": [value of field],
-        //     "condition": "[rule condition]",
-        //     "condition_value: [condition value]
-        //     }
-        // }
-        
         if(!validateRule(fieldValue, data.rule.condition_value, data.rule.condition)){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`field ${data.rule.field} failed validation.`, status:'error', data:{validation:{error:false, field:data.rule.field, field_value: fieldValue, condition: data.rule.condition, condition_value:data.rule.condition_value}}})
         }
 
+        return HttpResponse.GoodResponse(HTTP_CODES.OK, {message: `field ${data.rule.field} successfully validated.`, status:"success", data:{validation:{error:false, field:data.rule.field, field_value:fieldValue, condition: data.rule.condition, condition_value:data.rule.condition_value}}})
     }
 
     return {

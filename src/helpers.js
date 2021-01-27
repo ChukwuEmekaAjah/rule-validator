@@ -60,7 +60,7 @@ function findFieldValue(data, fields){
 
         
     }
-    console.log(" validated data is", object, "fields are", fields)
+    
     return object;
 }
 

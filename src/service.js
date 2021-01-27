@@ -19,7 +19,21 @@ function ValidationService(){
     }
 
     function ValidateData(data){
-        
+        if(data.hasOwnProperty('rule') === false){
+            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`rule is required.`, data:null, status:'error'})
+        }
+
+        if(typeof(data.rule) !== 'object' || Object.getPrototypeOf(data.rule).toString() !== "[object Object]"){
+            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`rule should be an object.`, data:null, status:'error'})
+        }
+
+        // check for the compulsory fields in rule object
+        const ruleFields = ['field', 'condition', 'condition_value'];
+        for(let field of ruleFields){
+            if(data.rule.hasOwnProperty(field) === false){
+                return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`${field} is required.`, data:null, status:'error'})
+            }
+        }
     }
 
     return {

@@ -20,7 +20,23 @@ describe('Validation should assess request body and return a result accordingly'
     test("should return a 400 bad request response for invalid request body", () => {
         const {statusCode, ...response} = ValidationService.ValidateData({});
         
-        expect(statusCode).toEqual(HTTP_CODES.OK);
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        
+    });
+
+    test("should return a 400 bad request response inexistent rule property", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`rule is required.`)
+        
+    });
+
+    test("should return a 400 bad request response for invalid rule value", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:3});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`rule should be an object.`)
         
     });
 

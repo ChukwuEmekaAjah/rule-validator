@@ -48,7 +48,7 @@ function findFieldValue(data, fields){
         }
 
         if(typeof(object) == 'string'){
-            object = object[Number[field]];
+            object = object[Number(field)];
             continue;
         }
         if(Array.isArray(object)){
@@ -60,7 +60,7 @@ function findFieldValue(data, fields){
 
         
     }
-
+    console.log(" validated data is", object, "fields are", fields)
     return object;
 }
 

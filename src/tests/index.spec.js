@@ -136,4 +136,36 @@ describe('Validation should assess request body and return a result accordingly'
         
     });
 
+    test("should return a 400 bad request response for failed validation", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'0.name', condition:"gt", condition_value:'meat'}, data:[{name:''}]});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`field 0.name failed validation.`)
+        
+    });
+
+    test("should return a 400 bad request response for failed validation", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'0.name', condition:"gte", condition_value:'meet'}, data:[{name:'meat'}]});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`field 0.name failed validation.`)
+        expect(response.data.validation.field_value).toEqual('meat')
+    });
+
+    test("should return a 400 bad request response for failed validation", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'2', condition:"gte", condition_value:'meet'}, data:['age', 'friends', 'meat', 'people']});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`field 2 failed validation.`)
+        expect(response.data.validation.field_value).toEqual('meat')
+    });
+
+    test("should return a 400 bad request response for failed validation", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'2', condition:"eq", condition_value:'a'}, data:'greet'});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`field 2 failed validation.`)
+        expect(response.data.validation.field_value).toEqual('e')
+    });
+
 });

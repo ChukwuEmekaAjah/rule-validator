@@ -28,7 +28,8 @@ function ValidationService(){
 
         return conditions[condition] ? true : false;
     }
-    function conditionCheck(data, conditionValue, condition){
+
+    function validateRule(data, conditionValue, condition){
         const conditions = {
             "gte": data >= conditionValue,
             "eq": data === conditionValue,
@@ -92,7 +93,23 @@ function ValidationService(){
         if(!isValidCondition(data.rule.condition)){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`condition ${data.rule.condition} is invalid.`, data:null, status:'error'})
         }
+
+        // "message": "field [name of field] failed validation."
+        // "status": "error",
+        // "data": {
+        //     "validation": {
+        //     "error": false,
+        //     "field": "[name of field]",
+        //     "field_value": [value of field],
+        //     "condition": "[rule condition]",
+        //     "condition_value: [condition value]
+        //     }
+        // }
         
+        if(!validateRule(fieldValue, data.rule.condition_value, data.rule.condition)){
+            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`field ${data.rule.field} failed validation.`, status:'error', data:{validation:{error:false, field:data.rule.field, field_value: fieldValue, condition: data.rule.condition, condition_value:data.rule.condition_value}}})
+        }
+
     }
 
     return {

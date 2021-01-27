@@ -16,7 +16,7 @@ app.use(function(err, req, res, next){
 	if(err){
 		return res.status(HTTP_CODES.BAD_REQUEST).send({
 			status:"error",
-			message: "Invalid JSON data.",
+			message: "Invalid JSON payload passed.",
 			data: null
 		})
 	}
@@ -33,7 +33,9 @@ exports.getApplication = function getApplication () {
 	});
 
 	app.post('/validate-rule', function(req, res){
-		return res.send("About to validate data")
+		const requestBody = Object.assign({}, req.body);
+		const {status, ...response} = ValidationService.ValidateData(requestBody)
+		return res.status(status).send(response);
 	});
 
 	app.use(function( req, res){

@@ -34,6 +34,26 @@ function ValidationService(){
                 return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`${field} is required.`, data:null, status:'error'})
             }
         }
+
+        if(data.hasOwnProperty('data') === false){
+            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`data is required.`, data:null, status:'error'})
+        }
+
+        let typeOfData = null;
+
+        if(typeof(data.data) == 'string'){
+            typeOfData = 'string';
+        } else if(typeof(data.data) == 'object'){
+            if(Array.isArray(data.data)){
+                typeOfData = 'array';
+            }else{
+                typeOfData = 'object';
+            }
+        }
+
+        if(Boolean(typeOfData) == false){
+            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`data is invalid.`, data:null, status:'error'})
+        }
     }
 
     return {

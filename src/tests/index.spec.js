@@ -72,4 +72,20 @@ describe('Validation should assess request body and return a result accordingly'
         
     });
 
+    test("should return a 400 bad request response for absent data field", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'gte', condition:"gt", condition_value:'meat'}});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`data is required.`)
+        
+    });
+
+    test("should return a 400 bad request response for invalid data type", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'gte', condition:"gt", condition_value:'meat'}, data:3});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`data is invalid.`)
+        
+    });
+
 });

@@ -1,5 +1,6 @@
 const helpers = require("./helpers");
-const HttpResponse = helpers.HttpResponse();
+const HttpResponse = helpers.HttpResponse;
+const HTTP_CODES = helpers.HTTP_CODES;
 function ValidationService(){
     function GetHome(){
         const data = {
@@ -14,7 +15,7 @@ function ValidationService(){
             }
         }
 
-        return HttpResponse.GoodResponse(200, data, "Successfully retrieved developer details");
+        return HttpResponse.GoodResponse(HTTP_CODES.OK, data, "Successfully retrieved developer details");
     }
 
     function ValidateData(data){

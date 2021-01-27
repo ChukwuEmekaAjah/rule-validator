@@ -3,20 +3,21 @@ const app = express();
 const morgan = require('morgan');
 const helmet = require('helmet');
 const ValidationService = require('./service');
+const helpers = require("./helpers");
+const HTTP_CODES = helpers.HTTP_CODES;
 
 app.use(express.json());
 app.disable('etag').disable('x-powered-by');
-
+app.use(morgan('combined'));
+app.use(helmet())
 
 app.use(function(err, req, res, next){
 	// invalid json data
 	if(err){
-		return res.status(400).send({
-			errors:[{
-				reason: 'Invalid data sent. Expected a valid JSON data',
-				field: null,
-				code: '4xx',
-			}]
+		return res.status(HTTP_CODES.BAD_REQUEST).send({
+			status:"error",
+			message: "Invalid JSON data.",
+			data: null
 		})
 	}
 	
@@ -24,25 +25,23 @@ app.use(function(err, req, res, next){
 })
 
 exports.getApplication = function getApplication () {
-	app.use(morgan('combined'));
-	app.use(helmet())
+	
 	
 	app.get('/', function(req, res){
 		const {status, ...response} = ValidationService.GetHome();
 		return res.status(status).send(response);
 	});
+
 	app.post('/validate-rule', function(req, res){
 		return res.send("About to validate data")
 	});
 
 	app.use(function( req, res){
 		// invalid endpoint
-		return res.status(404).send({
-			errors:[{
-				reason: 'You have lost your way mate.',
-				field: null,
-				code: '4xx',
-			}]
+		return res.status(HTTP_CODES.NOT_FOUND).send({
+			status:"error",
+			message: "API endpoint not found.",
+			data: null
 		})
 	})
 	

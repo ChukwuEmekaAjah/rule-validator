@@ -65,6 +65,7 @@ function ValidationService(){
             }
         }
 
+        // data field is required
         if(data.hasOwnProperty('data') === false){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`data is required.`, data:null, status:'error'})
         }
@@ -74,7 +75,9 @@ function ValidationService(){
         if(typeof(data.data) == 'string'){
             typeOfData = 'string';
         } else if(typeof(data.data) == 'object'){
-            if(Array.isArray(data.data)){
+            if(data.data === null){
+                typeOfData = null;
+            }else if(Array.isArray(data.data)){
                 typeOfData = 'array';
             }else{
                 typeOfData = 'object';
@@ -85,6 +88,7 @@ function ValidationService(){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`data is invalid.`, data:null, status:'error'})
         }
 
+        // create an array of properties e.g person.age -> ['person', 'age'], age -> [age], 2 -> [2], person.0 -> [person, 0]
         let parsedFieldValue = (typeof(data.rule.field) == 'string' && Boolean(data.rule.field)) ? data.rule.field.split('.') : typeof(data.rule.field) == 'number' ? [data.rule.field] : null;
         
         if(Boolean(parsedFieldValue) == false){
@@ -102,7 +106,7 @@ function ValidationService(){
         }
 
         if(!validateRule(fieldValue, data.rule.condition_value, data.rule.condition)){
-            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`field ${data.rule.field} failed validation.`, status:'error', data:{validation:{error:false, field:data.rule.field, field_value: fieldValue, condition: data.rule.condition, condition_value:data.rule.condition_value}}})
+            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`field ${data.rule.field} failed validation.`, status:'error', data:{validation:{error:true, field:data.rule.field, field_value: fieldValue, condition: data.rule.condition, condition_value:data.rule.condition_value}}})
         }
 
         return HttpResponse.GoodResponse(HTTP_CODES.OK, {message: `field ${data.rule.field} successfully validated.`, status:"success", data:{validation:{error:false, field:data.rule.field, field_value:fieldValue, condition: data.rule.condition, condition_value:data.rule.condition_value}}})

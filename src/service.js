@@ -54,6 +54,19 @@ function ValidationService(){
         if(Boolean(typeOfData) == false){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`data is invalid.`, data:null, status:'error'})
         }
+
+        let parsedFieldValue = null;
+
+        if(typeOfData == 'string' || typeOfData === 'array'){
+            let position = Number(data.rule.field);
+            parsedFieldValue = (position !== 0 && !position) ? null : position;
+        } else{
+            parsedFieldValue = Boolean(data.rule.field) ? data.rule.field.split(".") : null;
+        }
+
+        if(Boolean(parsedFieldValue) == false){
+            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`${data.rule.field} should be ${typeOfData !== 'object' ? 'an' : 'a'} ${typeOfData !== 'object' ? 'integer' : 'string'}.`, data:null, status:'error'})
+        }
     }
 
     return {

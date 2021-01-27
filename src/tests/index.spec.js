@@ -88,4 +88,20 @@ describe('Validation should assess request body and return a result accordingly'
         
     });
 
+    test("should return a 400 bad request response for invalid non-matching field type with data", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'name', condition:"gt", condition_value:'meat'}, data:'name'});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`name should be an integer.`)
+        
+    });
+
+    test("should return a 400 bad request response for invalid non-matching field type with data", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'', condition:"gt", condition_value:'meat'}, data:{name:'name'}});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(` should be a string.`)
+        
+    });
+
 });

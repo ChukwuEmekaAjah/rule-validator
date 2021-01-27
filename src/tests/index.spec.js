@@ -40,4 +40,36 @@ describe('Validation should assess request body and return a result accordingly'
         
     });
 
+    test("should return a 400 bad request response for non-existent rule field", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{condition:'gte', condition_value:"meat"}});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`field is required.`)
+        
+    });
+
+    test("should return a 400 bad request response for non-existent rule condition", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'gte', condition_value:"meat"}});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`condition is required.`)
+        
+    });
+
+    test("should return a 400 bad request response for non-existent rule condition_value", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'gte', condition:"gt"}});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`condition_value is required.`)
+        
+    });
+
+    test("should return a 400 bad request response for empty rule object", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{}});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`field is required.`)
+        
+    });
+
 });

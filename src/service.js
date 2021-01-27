@@ -78,7 +78,7 @@ function ValidationService(){
         }
 
         let parsedFieldValue = (typeof(data.rule.field) == 'string' && Boolean(data.rule.field)) ? data.rule.field.split('.') : typeof(data.rule.field) == 'number' ? [data.rule.field] : null;
-        console.log("parsed field value", parsedFieldValue);
+        
         if(Boolean(parsedFieldValue) == false){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`${data.rule.field} should be ${typeOfData !== 'object' ? 'an' : 'a'} ${typeOfData !== 'object' ? 'integer' : 'string'}.`, data:null, status:'error'})
         }
@@ -87,6 +87,10 @@ function ValidationService(){
 
         if(fieldValue === undefined){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`field ${data.rule.field} is missing from data.`, data:null, status:'error'})
+        }
+
+        if(!isValidCondition(data.rule.condition)){
+            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`condition ${data.rule.condition} is invalid.`, data:null, status:'error'})
         }
         
     }

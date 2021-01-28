@@ -100,7 +100,15 @@ describe('Validation should assess request body and return a result accordingly'
         const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'', condition:"gt", condition_value:'meat'}, data:{name:'name'}});
         
         expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
-        expect(response.message).toEqual(` should be a string.`)
+        expect(response.message).toEqual(`field should be a string.`)
+        
+    });
+
+    test("should return a 400 bad request response for invalid condition type", () => {
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'name', condition:3, condition_value:'meat'}, data:{name:'name'}});
+        
+        expect(statusCode).toEqual(HTTP_CODES.BAD_REQUEST);
+        expect(response.message).toEqual(`condition should be a string.`)
         
     });
 

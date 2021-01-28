@@ -116,7 +116,7 @@ function ValidationService(){
         let parsedFieldValue = (typeof(data.rule.field) == 'string' && Boolean(data.rule.field)) ? data.rule.field.split('.') : typeof(data.rule.field) == 'number' ? [data.rule.field] : null;
         
         if(Boolean(parsedFieldValue) == false){
-            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`${data.rule.field} should be ${typeOfData !== 'object' ? 'an' : 'a'} ${typeOfData !== 'object' ? 'integer' : 'string'}.`, data:null, status:'error'})
+            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`${'field'} should be ${typeOfData !== 'object' ? 'an' : 'a'} ${typeOfData !== 'object' ? 'integer' : 'string'}.`, data:null, status:'error'})
         }
 
         const fieldValue = helpers.findFieldValue(data.data, parsedFieldValue);

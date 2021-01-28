@@ -31,7 +31,7 @@ function ValidationService(){
 
     function validateRule(data, conditionValue, condition){
         function objectsAreEqual(obj1, obj2){
-            if(Object.keys(obj1).length !== Object.keys(obj2)){
+            if(Object.keys(obj1).length !== Object.keys(obj2).length){
                 return false;
             }
             for(let prop in obj1){

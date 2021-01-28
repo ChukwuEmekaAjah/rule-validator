@@ -119,6 +119,10 @@ function ValidationService(){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`${'field'} should be ${typeOfData !== 'object' ? 'an' : 'a'} ${typeOfData !== 'object' ? 'integer' : 'string'}.`, data:null, status:'error'})
         }
 
+        if(typeof(data.rule.condition) !== 'string'){
+            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`${'condition'} should be a string.`, data:null, status:'error'})
+        }
+
         const fieldValue = helpers.findFieldValue(data.data, parsedFieldValue);
 
         if(fieldValue === undefined){

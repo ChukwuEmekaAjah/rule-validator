@@ -14,8 +14,9 @@ Run `npm test` on the command line console of the project folder.
 
 # Starting
 To start the API server, run:
-
 `npm start`
+
+The default API port is 3000 (when testing on localhost). API hostname would be localhost:3000 on localhost.
 
 # API Endpoints
 - [GET] / : Retrieve the developer details

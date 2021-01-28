@@ -30,6 +30,18 @@ function ValidationService(){
     }
 
     function validateRule(data, conditionValue, condition){
+        function objectsAreEqual(obj1, obj2){
+            if(Object.keys(obj1).length !== Object.keys(obj2)){
+                return false;
+            }
+            for(let prop in obj1){
+                if(obj1[prop] !== obj2[prop]){
+                    return false;
+                }
+            }
+            return true;
+        }
+
         const conditions = {
             "gte": data >= conditionValue,
             "eq": data === conditionValue,
@@ -41,9 +53,17 @@ function ValidationService(){
             conditions.contains = data.indexOf(conditionValue) > -1 ? true : false
         } else if(typeof(data) == 'object'){
             conditions.contains = data.hasOwnProperty(conditionValue);
+            conditions.eq = objectsAreEqual(data, conditionValue);
+            conditions.neq = !objectsAreEqual(data, conditionValue);
         } else{
             conditions.contains = false;
         }
+
+        if(Array.isArray(data)){
+            conditions.eq = objectsAreEqual(data, conditionValue);
+            conditions.neq = !objectsAreEqual(data, conditionValue);
+        }
+        
 
         return conditions[condition]
     }

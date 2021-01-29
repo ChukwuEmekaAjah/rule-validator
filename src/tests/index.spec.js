@@ -189,11 +189,11 @@ describe('Validation should assess request body and return a result accordingly'
 describe('Validation of successful request bodies', function() {
 
     test("should return a 200 OK response for array of objects validation", () => {
-        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'0.name', condition:"eq", condition_value:'meat'}, data:[{name:'meat'}]});
+        const {statusCode, ...response} = ValidationService.ValidateData({rule:{field:'0', condition:"eq", condition_value:{name:'meat'}}, data:[{name:'meat'}]});
         
         expect(statusCode).toEqual(HTTP_CODES.OK);
-        expect(response.message).toEqual(`field 0.name successfully validated.`)
-        expect(response.data.validation.field_value).toEqual('meat')
+        expect(response.message).toEqual(`field 0 successfully validated.`)
+        expect(response.data.validation.field_value).toEqual({name:'meat'})
     });
 
     test("should return a 200 OK response for array of numbers validation", () => {

@@ -1,3 +1,4 @@
+const _ = require('underscore');
 const helpers = require("./helpers");
 const HttpResponse = helpers.HttpResponse;
 const HTTP_CODES = helpers.HTTP_CODES;
@@ -30,17 +31,6 @@ function ValidationService(){
     }
 
     function validateRule(data, conditionValue, condition){
-        function objectsAreEqual(obj1, obj2){
-            if(Object.keys(obj1).length !== Object.keys(obj2).length){
-                return false;
-            }
-            for(let prop in obj1){
-                if(obj1[prop] !== obj2[prop]){
-                    return false;
-                }
-            }
-            return true;
-        }
 
         const conditions = {
             "gte": data >= conditionValue,
@@ -53,18 +43,17 @@ function ValidationService(){
             conditions.contains = data.indexOf(conditionValue) > -1 ? true : false
         } else if(typeof(data) == 'object'){
             conditions.contains = data.hasOwnProperty(conditionValue);
-            conditions.eq = objectsAreEqual(data, conditionValue);
-            conditions.neq = !objectsAreEqual(data, conditionValue);
+            conditions.eq = _.isEqual(data, conditionValue);
+            conditions.neq = !_.isEqual(data, conditionValue);
         } else{
             conditions.contains = false;
         }
 
         if(Array.isArray(data)){
-            conditions.eq = objectsAreEqual(data, conditionValue);
-            conditions.neq = !objectsAreEqual(data, conditionValue);
+            conditions.eq = _.isEqual(data, conditionValue);
+            conditions.neq = !_.isEqual(data, conditionValue);
         }
         
-
         return conditions[condition]
     }
 
@@ -132,6 +121,7 @@ function ValidationService(){
         if(fieldValue === undefined){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`field ${data.rule.field} is missing from data.`, data:null, status:'error'})
         }
+
 
         if(!validateRule(fieldValue, data.rule.condition_value, data.rule.condition)){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`field ${data.rule.field} failed validation.`, status:'error', data:{validation:{error:true, field:data.rule.field, field_value: fieldValue, condition: data.rule.condition, condition_value:data.rule.condition_value}}})

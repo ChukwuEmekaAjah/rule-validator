@@ -16,6 +16,7 @@ function HTTP_CODES(){
         'SERVER_ERROR': 500,
     }
 }
+
 function HttpResponse(){
     function GoodResponse(statusCode, data, message){
         //logMessage(message);

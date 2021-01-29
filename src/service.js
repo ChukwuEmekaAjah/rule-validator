@@ -123,14 +123,14 @@ function ValidationService(){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`${'condition'} should be a string.`, data:null, status:'error'})
         }
 
+        if(!isValidCondition(data.rule.condition)){
+            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`condition ${data.rule.condition} is invalid.`, data:null, status:'error'})
+        }
+
         const fieldValue = helpers.findFieldValue(data.data, parsedFieldValue);
 
         if(fieldValue === undefined){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`field ${data.rule.field} is missing from data.`, data:null, status:'error'})
-        }
-
-        if(!isValidCondition(data.rule.condition)){
-            return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`condition ${data.rule.condition} is invalid.`, data:null, status:'error'})
         }
 
         if(!validateRule(fieldValue, data.rule.condition_value, data.rule.condition)){

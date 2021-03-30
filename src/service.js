@@ -18,6 +18,7 @@ function ValidationService(){
 
         return HttpResponse.GoodResponse(HTTP_CODES.OK, data, "Successfully retrieved developer details");
     }
+
     function isValidCondition(condition){
         const conditions = {
             "gte": true,
@@ -121,7 +122,6 @@ function ValidationService(){
         if(fieldValue === undefined){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`field ${data.rule.field} is missing from data.`, data:null, status:'error'})
         }
-
 
         if(!validateRule(fieldValue, data.rule.condition_value, data.rule.condition)){
             return HttpResponse.BadResponse(HTTP_CODES.BAD_REQUEST, {message:`field ${data.rule.field} failed validation.`, status:'error', data:{validation:{error:true, field:data.rule.field, field_value: fieldValue, condition: data.rule.condition, condition_value:data.rule.condition_value}}})

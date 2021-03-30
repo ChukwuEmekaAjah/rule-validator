@@ -4,6 +4,9 @@ const app = getApplication();
 const server = require('http').createServer(app);
 
 const port = process.env.PORT || 3000;
+// process.env.NODE_V8_COVERAGE = "coveralls"
+// npx c8 node src/index.js 
+
 
 const start = async function(){
     try{

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./src/index.js",
     "startdev": "nodemon ./src/index.js",
-    "push": "git add -A && git commit -m  \" $npm_config_msg \" && git push origin master",
+    "push": "git add -A && git commit -m  \"   $npm_config_msg \" && git push origin master",
     "test": "jest"
   },
   "author": "Chukwuemeka Ajah",
